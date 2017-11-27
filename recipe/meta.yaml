@@ -17,12 +17,13 @@ build:
 
 requirements:
   build:
+    - {{ compiler('c') }}
+  host:
     - python
     - setuptools
     - blosc
   run:
     - python
-    - blosc
     - numpy
 
 test:
@@ -43,3 +44,4 @@ extra:
   recipe-maintainers:
     - danielfrg
     - FrancescElies
+    - msarahan
