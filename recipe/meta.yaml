@@ -26,8 +26,8 @@ requirements:
     - python                                 # [build_platform != target_platform]
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - cmake
-    - make
+    - cmake  # [win]
+    - make  # [unix]
   host:
     - blosc
     - pip
