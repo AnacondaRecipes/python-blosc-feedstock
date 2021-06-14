@@ -13,32 +13,50 @@ source:
 
 build:
   number: 0
-  script: {{PYTHON}} setup.py install --blosc=$PREFIX --single-version-externally-managed --record record.txt
+  script: 
+    - export DISABLE_BLOSC_SSE2=1  # [ppc64le]
+    - export DISABLE_BLOSC_AVX2=1  # [ppc64le]
+    - {{ PYTHON }} -m pip install . -vv
+  ignore_run_exports:
+    - python
+    - blosc
 
 requirements:
   build:
+    - python                                 # [build_platform != target_platform]
     - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake
+    - make
   host:
-    - python
-    - setuptools
     - blosc
+    - pip
+    - python >=3.7
+    - setuptools
+    - scikit-build
+    - wheel
   run:
-    - python
+    - blosc
     - numpy
+    - python
 
 test:
   imports:
     - blosc
+  requires:
+    - numpy
+    - psutil
   commands:
     - python -c "import blosc; blosc.print_versions()"
     - python -c "import blosc; blosc.test()"
 
 about:
-  home: https://github.com/Blosc/python-blosc
-  license_family: Apache
-  license: Apache 2.0
-  license_file: LICENSES/PYTHON-BLOSC.txt
-  summary: 'A Python wrapper for the extremely fast Blosc compression library'
+  home: http://python-blosc.blosc.org/
+  license_family: BSD
+  license: BSD-3-Clause
+  summary: A Python wrapper for the extremely fast Blosc compression library
+  dev_url: https://github.com/Blosc/python-blosc
+  doc_url: http://python-blosc.blosc.org/
 
 extra:
   recipe-maintainers:
