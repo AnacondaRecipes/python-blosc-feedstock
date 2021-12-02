@@ -50,10 +50,12 @@ test:
     - python -c "import blosc; blosc.test()"
 
 about:
-  home: https://github.com/Blosc/python-blosc
+  home: http://python-blosc.blosc.org/
   license_family: BSD
   license: BSD-3-Clause
   summary: A Python wrapper for the extremely fast Blosc compression library
+  dev_url: https://github.com/Blosc/python-blosc
+  doc_url: http://python-blosc.blosc.org/
 
 extra:
   recipe-maintainers:
