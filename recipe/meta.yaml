@@ -31,7 +31,6 @@ requirements:
   host:
     - python
     - pip
-    - blosc
     - scikit-build
     - setuptools
     - wheel
