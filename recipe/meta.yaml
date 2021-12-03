@@ -13,12 +13,14 @@ source:
 
 build:
   number: 0
-  # There is not available a dependency scikit-build on win32
+  # There is no available dependency scikit-build on win32
   skip: True  # [win32]
   skip: True  # [py<36]
   script:
     - export DISABLE_BLOSC_SSE2=1  # [ppc64le]
     - export DISABLE_BLOSC_AVX2=1  # [ppc64le]
+    - export USE_SYSTEM_BLOSC=1    # [unix]
+    - set USE_SYSTEM_BLOSC=1       # [win]
     - {{ PYTHON }} -m pip install . -vv
 
 requirements:
@@ -30,6 +32,7 @@ requirements:
     - ninja
   host:
     - python
+    - blosc
     - pip
     - scikit-build
     - setuptools
