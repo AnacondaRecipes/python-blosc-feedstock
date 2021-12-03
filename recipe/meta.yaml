@@ -1,6 +1,6 @@
 {% set name = "blosc" %}
-{% set version = "1.10.2" %}
-{% set sha256 = "eeba922f52becd697dc5cfcee8d01a03ba9597a54ce91fdacd9998492acbed9b" %}
+{% set version = "1.10.6" %}
+{% set sha256 = "55d9d57b85d6eeec010c6c399f2820f96f566dccbc6ddfeefb60501f8e10b548" %}
 
 package:
   name: python-{{ name|lower }}
@@ -13,12 +13,14 @@ source:
 
 build:
   number: 0
+  # There is no available dependency scikit-build on win32
+  skip: True  # [win32 or s390x]
+  skip: True  # [py<36]
   script:
-    # We can't use CMAKE_GENERATOR implicitly via conda_build_config.yaml, yet,
-    # due to https://github.com/AnacondaRecipes/aggregate/pull/182
-    - set "CMAKE_GENERATOR={{ CMAKE_GENERATOR }}"  # [win]
     - export DISABLE_BLOSC_SSE2=1  # [ppc64le]
     - export DISABLE_BLOSC_AVX2=1  # [ppc64le]
+    - export USE_SYSTEM_BLOSC=1    # [unix]
+    - set USE_SYSTEM_BLOSC=1       # [win]
     - {{ PYTHON }} -m pip install . -vv
 
 requirements:
@@ -27,31 +29,36 @@ requirements:
     - {{ compiler('cxx') }}
     - cmake
     - make  # [unix]
+    - ninja
   host:
     - python
-    - setuptools
     - blosc
     - pip
-    - wheel
     - scikit-build
+    - setuptools
+    - wheel
   run:
     - python
-    - blosc
-    - numpy
-    - psutil
+
 test:
   imports:
     - blosc
+  requires:
+    - numpy
+    - psutil
+    - pip
   commands:
+    - pip check
     - python -c "import blosc; blosc.print_versions()"
     - python -c "import blosc; blosc.test()"
 
 about:
-  home: https://github.com/Blosc/python-blosc
-  license_family: Apache
-  license: Apache 2.0
-  license_file: LICENSES/PYTHON-BLOSC.txt
-  summary: 'A Python wrapper for the extremely fast Blosc compression library'
+  home: http://python-blosc.blosc.org/
+  license_family: BSD
+  license: BSD-3-Clause
+  summary: A Python wrapper for the extremely fast Blosc compression library
+  dev_url: https://github.com/Blosc/python-blosc
+  doc_url: http://python-blosc.blosc.org/
 
 extra:
   recipe-maintainers:
