@@ -14,7 +14,7 @@ source:
 build:
   number: 0
   # There is no available dependency scikit-build on win32
-  skip: True  # [win32]
+  skip: True  # [win32 or s390x]
   skip: True  # [py<36]
   script:
     - export DISABLE_BLOSC_SSE2=1  # [ppc64le]
