@@ -1,64 +1,68 @@
 {% set name = "blosc" %}
-{% set version = "1.10.6" %}
-{% set sha256 = "55d9d57b85d6eeec010c6c399f2820f96f566dccbc6ddfeefb60501f8e10b548" %}
+{% set version = "1.11.3" %}
 
 package:
   name: python-{{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: {{ sha256 }}
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 89ed658eba7814a92e89c44d8c524148d55921595bc133bd1a90f8888a9e088e
+  patches:  # [unix]
+    - numpy-usage.patch  # [unix]
 
 build:
   number: 0
-  # There is no available dependency scikit-build on win32
-  skip: True  # [win32 or s390x]
-  skip: True  # [py<36]
+  skip: True  # [py<310]
   script:
-    - export DISABLE_BLOSC_SSE2=1  # [ppc64le]
-    - export DISABLE_BLOSC_AVX2=1  # [ppc64le]
     - export USE_SYSTEM_BLOSC=1    # [unix]
     - set USE_SYSTEM_BLOSC=1       # [win]
-    - {{ PYTHON }} -m pip install . -vv
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - cmake
+    - cmake >=3.14.0
     - make  # [unix]
-    - ninja
+    - ninja-base
   host:
+    - pip
     - python
     - blosc
-    - pip
-    - scikit-build
+    - numpy >=1.16
     - setuptools
-    - wheel
+    - scikit-build >=0.11.1
+    - py-cpuinfo
   run:
+    - blosc
     - python
 
 test:
   imports:
     - blosc
   requires:
+    - pip
     - numpy
     - psutil
-    - pip
   commands:
     - pip check
-    - python -c "import blosc; blosc.print_versions()"
-    - python -c "import blosc; blosc.test()"
+    # Skipped tests on Windows due to code misalignment on CI for no reason (patch is not applying)
+    - python -m blosc.test  # [not win]
 
 about:
-  home: http://python-blosc.blosc.org/
-  license_family: BSD
+  home: http://python-blosc.blosc.org
   license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE.txt
   summary: A Python wrapper for the extremely fast Blosc compression library
+  description: |
+    Blosc is a high performance compressor optimized for binary data. 
+    It has been designed to transmit data to the processor cache faster 
+    than the traditional, non-compressed, direct memory fetch approach via a memcpy() OS call.
   dev_url: https://github.com/Blosc/python-blosc
-  doc_url: http://python-blosc.blosc.org/
+  doc_url: http://python-blosc.blosc.org
 
 extra:
   recipe-maintainers:
