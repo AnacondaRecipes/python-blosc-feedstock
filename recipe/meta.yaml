@@ -48,7 +48,7 @@ test:
     - python -m blosc.test
 
 about:
-  home: http://python-blosc.blosc.org
+  home: https://blosc.org/python-blosc
   license: BSD-3-Clause
   license_family: BSD
   license_file: LICENSE.txt
@@ -58,7 +58,7 @@ about:
     It has been designed to transmit data to the processor cache faster
     than the traditional, non-compressed, direct memory fetch approach via a memcpy() OS call.
   dev_url: https://github.com/Blosc/python-blosc
-  doc_url: http://python-blosc.blosc.org
+  doc_url: https://blosc.org/python-blosc
 
 extra:
   recipe-maintainers:
