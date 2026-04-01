@@ -8,8 +8,8 @@ package:
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: e0b312d9554d3aea93c75af4ad70dfa8b815ef4fe2b658c313b2f27ed0f41d37
-  patches:  # [unix]
-    - numpy-usage.patch  # [unix]
+  # patches:
+  #   - numpy-usage.patch
 
 build:
   number: 0
@@ -31,25 +31,23 @@ requirements:
     - pip
     - python
     - blosc
-    - numpy >=1.16
     - setuptools
     - scikit-build >=0.11.1
     - py-cpuinfo
   run:
-    - blosc
     - python
+    - blosc
+    - numpy >=1.16
 
 test:
   imports:
     - blosc
   requires:
     - pip
-    - numpy
     - psutil
   commands:
     - pip check
-    # Skipped tests on Windows due to code misalignment on CI for no reason (patch is not applying)
-    - python -m blosc.test  # [not win]
+    - python -m blosc.test
 
 about:
   home: http://python-blosc.blosc.org
