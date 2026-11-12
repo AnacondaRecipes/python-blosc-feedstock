@@ -10,7 +10,7 @@ source:
   sha256: e0b312d9554d3aea93c75af4ad70dfa8b815ef4fe2b658c313b2f27ed0f41d37
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<310]
   script:
     - export USE_SYSTEM_BLOSC=1  # [unix]
@@ -28,7 +28,7 @@ requirements:
   host:
     - pip
     - python
-    - blosc
+    - blosc 1.21.6
     - setuptools
     - scikit-build >=0.11.1
     - py-cpuinfo
