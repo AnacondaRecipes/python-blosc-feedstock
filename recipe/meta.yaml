@@ -15,6 +15,7 @@ build:
   script:
     - export USE_SYSTEM_BLOSC=1  # [unix]
     - set USE_SYSTEM_BLOSC=1  # [win]
+    - export LDFLAGS="${LDFLAGS} -Xlinker -undefined -Xlinker dynamic_lookup"  # [osx]
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
